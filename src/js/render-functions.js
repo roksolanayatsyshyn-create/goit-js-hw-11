@@ -1,3 +1,37 @@
+import SimpleLightbox from "simplelightbox";
+
+import "simplelightbox/dist/simple-lightbox.min.css";
+
+
+let lightboxInstance = null; // інкапсульований інстанс
+
+const refs = {};
+
+function initLightbox(selector = '.gallery a') {
+
+  if (lightboxInstance) return;
+  lightboxInstance = new SimpleLightbox(selector, {
+    captions: true,
+    captionsData: 'alt',
+    captionDelay: 250,
+  });
+}
+
+
+function refreshLightbox() {
+  if (!lightboxInstance) {
+    initLightbox();
+    return;
+  }
+  lightboxInstance.refresh();
+}
+
+
+export function destroyLightbox() {
+  if (!lightboxInstance) return;
+  lightboxInstance.destroy();
+  lightboxInstance = null;
+}
 
 
 export function createGallery(images, galleryEl) {
@@ -35,22 +69,20 @@ export function createGallery(images, galleryEl) {
     )
     .join('');
 
-  const tempDiv = document.createElement("div");
-  tempDiv.innerHTML = markup;
+   
+  galleryEl.innerHTML = markup;
 
-  const imagesList = tempDiv.querySelectorAll("img");
 
-  const loadPromises = [...imagesList].map(img => {
-    return new Promise(resolve => {
-      if (img.complete) return resolve(); 
-      img.onload = resolve;
-      img.onerror = resolve;
-    });
-  });
+  const imagesList = galleryEl.querySelectorAll('img');
+  const loadPromises = [...imagesList].map(img => new Promise(resolve => {
+    if (img.complete) return resolve();
+    img.onload = img.onerror = resolve;
+  }));
 
-  
+
   return Promise.all(loadPromises).then(() => {
-   galleryEl.innerHTML = markup;
+   
+    refreshLightbox();
   });
 }
 
@@ -58,7 +90,9 @@ export function clearGallery(galleryEl){
   galleryEl.innerHTML = "";
 };
 export function showLoader(loaderEl){
+  if (!loaderEl) return;
   loaderEl.classList.remove("hidden")
 };
 export function hideLoader(loaderEl){
+  if (!loaderEl) return;
   loaderEl.classList.add("hidden")};

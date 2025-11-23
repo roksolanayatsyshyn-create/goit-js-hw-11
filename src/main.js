@@ -1,14 +1,14 @@
 import {getImagesByQuery} from './js/pixabay-api';
-import {createGallery, clearGallery, showLoader, hideLoader} from './js/render-functions';
+import { createGallery, clearGallery, showLoader, hideLoader} from './js/render-functions';
 import axios from "axios";
 
 import iziToast from "izitoast";
 
 import "izitoast/dist/css/iziToast.min.css";
 
-import SimpleLightbox from "simplelightbox";
+// import SimpleLightbox from "simplelightbox";
 
-import "simplelightbox/dist/simple-lightbox.min.css";
+// import "simplelightbox/dist/simple-lightbox.min.css";
 
 
 
@@ -19,11 +19,11 @@ export const refs={
   loader: document.querySelector('.loader'),
 }
 // console.log(refs)
-let galleryImg= new SimpleLightbox ('.gallery a', {
-  captions: true,
-  captionsData: 'alt',
-  captionDelay: 250,
-});
+// let galleryImg= new SimpleLightbox ('.gallery a', {
+//   captions: true,
+//   captionsData: 'alt',
+//   captionDelay: 250,
+// });
 
 
  async function onFormSubmit(event){
@@ -46,7 +46,7 @@ if (!query) return;
       return;}
      
     await createGallery(data.hits, refs.gallery); 
-    galleryImg.refresh();
+    // galleryImg.refresh();
   }catch (err) {
     console.error(err);
   }finally {
